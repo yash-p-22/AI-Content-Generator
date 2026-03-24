@@ -1,0 +1,639 @@
+
+
+## Project Title
+
+AI Website Content Generator
+
+
+# Project Goal
+
+Build a **production-quality full-stack web application using Next.js** that generates **structured website content** (Hero section, Services section, FAQ section) from business information using **LLM generation**.
+
+The application must use:
+
+* **Next.js App Router**
+* **Server API route for LLM calls**
+* **Dexie.js for IndexedDB persistence**
+* Client-side **generation rate limiting**
+* **JSON schema based structured outputs**
+* Export capability
+* A **premium portfolio-style UI inspired by the reference image**
+
+The system must work **inside Replit's built-in AI runtime first**, without requiring external API keys unless deployed outside Replit.
+
+---
+
+# Tech Stack
+
+Frontend
+
+* Next.js (App Router)
+* React
+* TypeScript
+* TailwindCSS
+* Framer Motion (for subtle animation)
+* ShadCN UI components
+* Lucide Icons
+
+Backend
+
+* Next.js API routes
+
+LLM
+
+* Use **Replit built-in AI environment**
+* Use OpenAI compatible interface
+
+Local Storage
+
+* Dexie.js
+* IndexedDB
+
+Export
+
+* JSON download
+* Text export
+
+---
+
+# Core Features
+
+## 1. Content Generation
+
+User provides business details:
+
+Inputs:
+
+* Business Name
+* Industry
+* Target Audience
+* Key Services (comma separated)
+* Unique Value Proposition
+* Tone of Voice (dropdown)
+* Website Goal (leads / sales / awareness)
+
+The system generates structured JSON containing:
+
+Hero Section
+Services Section
+FAQ Section
+
+---
+
+# Required JSON Output Schema
+
+The LLM must strictly return this JSON format:
+
+```
+{
+  "hero": {
+    "headline": "",
+    "subheadline": "",
+    "cta_primary": "",
+    "cta_secondary": ""
+  },
+  "services": [
+    {
+      "title": "",
+      "description": "",
+      "icon": ""
+    }
+  ],
+  "faq": [
+    {
+      "question": "",
+      "answer": ""
+    }
+  ]
+}
+```
+
+Rules:
+
+* 3 to 5 services
+* 5 FAQs
+* Tone must match user selection
+* Output must be pure JSON
+* No markdown
+* No explanations
+
+---
+
+# Prompt Template Used By API
+
+The backend must construct a system prompt like:
+
+"You are an expert SaaS website copywriter.
+
+Generate structured website content based on business details.
+
+Return ONLY valid JSON following this schema:
+
+[SCHEMA]
+
+Requirements:
+Hero:
+
+* Powerful marketing headline
+* Clear subheadline
+* 2 CTA buttons
+
+Services:
+
+* 3 to 5 services
+* Short descriptions
+
+FAQ:
+
+* 5 frequently asked questions
+* Concise answers"
+
+---
+
+# Backend API
+
+Create API route
+
+```
+/api/generate
+```
+
+Responsibilities
+
+1 Validate input
+2 Call LLM
+3 Parse JSON
+4 Return structured response
+
+Must include:
+
+```
+try/catch
+JSON validation
+fallback error response
+```
+
+---
+
+# Dexie Database Design
+
+Create IndexedDB database:
+
+```
+contentGeneratorDB
+```
+
+Table:
+
+```
+generations
+```
+
+Fields:
+
+```
+id
+timestamp
+inputData
+outputData
+```
+
+Dexie schema:
+
+```
+generations: "++id, timestamp"
+```
+
+---
+
+# Client Rate Limiting
+
+Users can generate **100 times per 24 hours**
+
+Logic:
+
+1 Query Dexie
+2 Filter timestamps within last 24 hours
+3 If >= 100 → block generation
+4 Show message
+
+Example message:
+
+"You have reached today's generation limit. Try again tomorrow."
+
+---
+
+# Export Feature
+
+Each generation card must allow:
+
+Download JSON
+
+```
+content.json
+```
+
+Download text version
+
+Example format:
+
+```
+HERO
+Headline:
+Subheadline:
+
+SERVICES
+1.
+2.
+3.
+
+FAQ
+Q:
+A:
+```
+
+---
+
+# Application Pages
+
+## Landing Page
+
+Purpose
+
+Marketing + access to generator
+
+Sections:
+
+Hero
+Features
+Generator preview
+Call to action
+
+---
+
+## Generator Page
+
+Main workspace.
+
+Layout:
+
+Left panel
+
+Input form
+
+Right panel
+
+Generated content preview
+
+---
+
+## History Page
+
+Shows past generations from Dexie.
+
+Cards show:
+
+* Business Name
+* Timestamp
+* Preview
+
+Actions:
+
+View
+Export
+Delete
+
+---
+
+# UI Design Requirements
+
+Design must follow **the visual structure of the reference image**.
+
+### Overall Style
+
+Minimal
+Clean
+Editorial
+High whitespace
+Subtle grid background
+Professional portfolio aesthetic
+High quality Fonts ( appear like in terminal, for more aesthetic look)
+
+---
+
+# Color Palette (Chosen for AI product)
+
+Primary
+
+Deep Indigo
+
+```
+#4338CA
+```
+
+Secondary
+
+Electric Violet
+
+```
+#7C3AED
+```
+
+Accent
+
+Soft Cyan
+
+```
+#22D3EE
+```
+
+Background
+
+Warm white
+
+```
+#F8FAFC
+```
+
+Text
+
+```
+#111827
+```
+
+Card
+
+```
+#FFFFFF
+```
+
+---
+
+# Background Pattern
+
+Add subtle **grid layout background**
+
+like the reference image.
+
+Use CSS:
+
+```
+background-image: linear-gradient(...)
+```
+
+Very faint.
+
+---
+
+# Header
+
+Top left
+
+App logo
+
+```
+AI Content Forge
+```
+
+Top right
+
+Status indicator
+
+```
+● AI Ready
+```
+
+Navigation
+
+Generator
+History
+Docs
+
+---
+
+# Hero Section
+
+Large editorial layout like the reference.
+
+Left aligned text.
+
+Headline example
+
+```
+Generate Website Copy That Converts
+```
+
+Subheadline
+
+```
+Turn your business idea into complete website content in seconds using AI.
+```
+
+Buttons
+
+Primary
+
+Generate Content
+
+Secondary
+
+View Examples
+
+---
+
+# Generator UI
+
+Two column layout.
+
+Left
+
+Input Form Card
+
+Right
+
+Output Preview
+
+---
+
+# Input Form
+
+Styled card.
+
+Fields stacked vertically.
+
+Use:
+
+rounded-xl
+shadow-sm
+subtle borders
+
+Generate button
+
+Large
+gradient button
+
+---
+
+# Output Preview
+
+Sections displayed as cards.
+
+Hero preview
+
+Services grid
+
+FAQ accordion
+
+Each card has export buttons.
+
+---
+
+# Services Layout
+
+3 column responsive grid.
+
+Each service card:
+
+Icon
+Title
+Description
+
+---
+
+# FAQ Layout
+
+Accordion list.
+
+Smooth expand animation.
+
+---
+
+# History Page
+
+Grid of generation cards.
+
+Each card contains:
+
+Business name
+Date
+Preview snippet
+
+Actions:
+
+View
+Export
+Delete
+
+---
+
+# Animations
+
+Use **Framer Motion**.
+
+Add:
+
+* Fade in
+* Smooth hover elevation
+* Button press feedback
+
+Keep subtle.
+
+---
+
+# Accessibility
+
+Must include:
+
+* Keyboard navigation
+* ARIA labels
+* Proper form labels
+
+---
+
+# File Structure
+
+```
+/app
+   page.tsx
+   generator/page.tsx
+   history/page.tsx
+
+/components
+   Header
+   Hero
+   GeneratorForm
+   OutputPreview
+   ServicesCard
+   FAQAccordion
+   HistoryCard
+
+/lib
+   dexie.ts
+   rateLimit.ts
+   promptBuilder.ts
+
+/app/api/generate/route.ts
+```
+
+---
+
+# Developer Notes
+
+When running inside **Replit**:
+
+Use their AI environment automatically.
+
+If environment variable exists:
+
+```
+OPENAI_API_KEY
+```
+
+use it.
+
+Else use Replit built-in AI client.
+
+---
+
+# Performance
+
+* Debounce form updates
+* Lazy render history
+* Cache last generation
+
+---
+
+# Final Experience Goal
+
+The user experience must feel like:
+
+* Premium SaaS tool
+* Effortless AI generation
+* Elegant design
+* Extremely responsive
+
+The UI should **feel closer to a modern design portfolio website rather than a typical form application**, similar to the visual language in the provided screenshot.
+
+---
+
+# Deliverables
+
+The generated project must run immediately with:
+
+```
+npm install
+npm run dev
+```
+
+No missing dependencies.
+
+All components functional.
+
+End-to-end generation working.
+
+Dexie persistence working.
+
+Rate limit working.
+
+Export working.
+
