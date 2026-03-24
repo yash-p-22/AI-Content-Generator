@@ -45,10 +45,10 @@ export default function History() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-background">
       <Sidebar />
 
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden pb-16 md:pb-0">
         {/* Page header */}
         <div className="flex-shrink-0 flex items-center justify-between px-6 py-4 border-b border-border bg-background/80 backdrop-blur-sm">
           <div>
@@ -60,7 +60,7 @@ export default function History() {
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 md:p-6">
           {generations === undefined ? (
             <div className="flex justify-center items-center h-40">
               <div className="flex flex-col items-center gap-3">
@@ -99,7 +99,7 @@ export default function History() {
                               {getBusinessName(record.inputData)}
                             </p>
                           </div>
-                          <span className="px-2 py-0.5 rounded-full bg-primary/8 dark:bg-primary/15 text-primary text-[11px] font-mono font-semibold border border-primary/20 shrink-0">
+                          <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-primary/8 dark:bg-primary/15 text-primary text-[11px] font-mono font-semibold border border-primary/20 shrink-0">
                             {getIndustry(record.inputData)}
                           </span>
                           <span className="text-[11px] text-muted-foreground font-mono shrink-0">

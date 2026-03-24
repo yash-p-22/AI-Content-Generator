@@ -10,6 +10,8 @@ import Home from "./pages/Home";
 import Generator from "./pages/Generator";
 import History from "./pages/History";
 
+import { MobileNav } from "@/components/layout/MobileNav";
+
 function Router() {
   return (
     <Switch>
@@ -28,6 +30,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <Router />
+          <MobileNav />
         </TooltipProvider>
       </QueryClientProvider>
     </ThemeProvider>

@@ -126,10 +126,10 @@ export default function Generator() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-background">
       <Sidebar />
 
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden pb-16 md:pb-0">
         {/* Page header */}
         <div className="flex-shrink-0 flex items-center justify-between px-6 py-4 border-b border-border bg-background/80 backdrop-blur-sm">
           <h1 className="text-2xl font-extrabold tracking-tight text-foreground">Generate</h1>
@@ -140,10 +140,10 @@ export default function Generator() {
           )}
         </div>
 
-        {/* Main two-column layout */}
-        <div className="flex-1 overflow-hidden flex gap-0">
+        {/* Main layout: Stacked on mobile, side-by-side on desktop */}
+        <div className="flex-1 overflow-y-auto md:overflow-hidden flex flex-col md:flex-row gap-0">
           {/* ─── LEFT: Form Panel ─────────────────────────────── */}
-          <div className="w-[390px] flex-shrink-0 flex flex-col border-r border-border overflow-hidden bg-background">
+          <div className="w-full md:w-[350px] lg:w-[390px] flex-shrink-0 flex flex-col border-b md:border-b-0 md:border-r border-border bg-background">
             <div className="flex-1 overflow-y-auto">
               <div className="p-5">
                 {/* Step tabs */}
@@ -365,7 +365,7 @@ export default function Generator() {
           </div>
 
           {/* ─── RIGHT: Output Panel ──────────────────────────── */}
-          <div className="flex-1 overflow-hidden flex flex-col">
+          <div className="flex-1 flex flex-col min-h-[400px] md:min-h-0 bg-muted/5">
             <AnimatePresence mode="wait">
               {output ? (
                 <motion.div
@@ -374,7 +374,7 @@ export default function Generator() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.25 }}
-                  className="flex-1 overflow-hidden p-6"
+                  className="flex-1 md:overflow-hidden p-4 md:p-6"
                 >
                   <GeneratedOutput
                     data={output}

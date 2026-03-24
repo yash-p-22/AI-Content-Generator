@@ -28,7 +28,7 @@ export default function Home() {
               Next-Gen Content Generation
             </div>
 
-            <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-gray-50 leading-[1.1] mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-gray-50 leading-[1.1] mb-6">
               Generate <span className="text-gradient">Professional</span>{" "}
               Website Content in Seconds
             </h1>
@@ -49,7 +49,7 @@ export default function Home() {
               </Link>
               <Link
                 href="/history"
-                className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold rounded-xl text-gray-700 dark:text-gray-800 bg-white dark:bg-white/8 border border-gray-200 dark:border-white/15 shadow-sm hover:bg-gray-50 dark:hover:bg-white/12 transition-all duration-200"
+                className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold rounded-xl text-gray-700 dark:text-gray-900 bg-white dark:bg-white/8 border border-gray-200 dark:border-white/15 shadow-sm hover:bg-gray-50 dark:hover:bg-white/12 transition-all duration-200"
               >
                 View Past Generations
               </Link>
@@ -76,7 +76,7 @@ export default function Home() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="relative w-full aspect-square lg:aspect-auto lg:h-[600px] flex items-center justify-center"
+            className="relative w-full aspect-[4/3] sm:aspect-square lg:aspect-auto lg:h-[600px] flex items-center justify-center"
           >
             <div className="relative w-full max-w-2xl rounded-2xl overflow-hidden glass-card p-2 border-white/40 dark:border-white/10 transform rotate-2 hover:rotate-0 transition-transform duration-500 ease-out">
               <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent z-10 pointer-events-none" />
@@ -89,7 +89,7 @@ export default function Home() {
 
             {/* Decorative floating elements */}
             <div
-              className="absolute top-10 -right-10 px-4 py-3 bg-white dark:bg-[#1e2438] rounded-xl shadow-xl border border-gray-100 dark:border-white/10 animate-bounce"
+              className="absolute top-10 -right-4 sm:-right-10 px-4 py-3 bg-white dark:bg-[#1e2438] rounded-xl shadow-xl border border-gray-100 dark:border-white/10 animate-bounce"
               style={{ animationDuration: "3s" }}
             >
               <p className="text-xs font-mono font-semibold text-primary">
@@ -97,7 +97,7 @@ export default function Home() {
               </p>
             </div>
             <div
-              className="absolute bottom-10 -left-6 px-4 py-3 bg-gray-900 dark:bg-[#252d3d] rounded-xl shadow-xl border border-gray-800 dark:border-white/10 animate-bounce"
+              className="absolute bottom-10 -left-2 sm:-left-6 px-4 py-3 bg-gray-900 dark:bg-[#252d3d] rounded-xl shadow-xl border border-gray-800 dark:border-white/10 animate-bounce"
               style={{ animationDuration: "4s" }}
             >
               <p className="text-xs font-mono font-semibold text-accent">
