@@ -8,6 +8,9 @@ export const generateInputSchema = z.object({
   targetAudience: z.string().min(1, "Target audience is required"),
   brandVoice: z.enum(["Professional", "Luxury", "Minimal"]),
   pageSections: z.array(z.string()).min(1, "Select at least one section"),
+  regeneratingSection: z.string().optional(),
+  regenerationFeedback: z.string().optional(),
+  previousContent: z.any().optional(),
 });
 
 // ─── Output Schemas ──────────────────────────────────────────────────────────

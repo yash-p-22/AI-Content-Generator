@@ -50,7 +50,7 @@ export async function registerRoutes(
       const input = api.content.generate.input.parse(req.body);
       const sections = input.pageSections;
 
-      const systemPrompt = `You are an expert website copywriter specialising in ${input.brandVoice.toLowerCase()} brand voice.
+      let systemPrompt = `You are an expert website copywriter specialising in ${input.brandVoice.toLowerCase()} brand voice.
 Generate structured website content based on the business details provided.
 Return ONLY valid JSON following this exact schema:
 ${buildSectionSchema(sections)}
@@ -94,12 +94,41 @@ Tone: ${input.brandVoice} — ${
             : "clean, direct, minimal"
       }`;
 
-      const userPrompt = `Generate website content for:
+      let userPrompt = `Generate website content for:
 Business: ${input.businessDescription}
 Industry: ${input.industry}
 Target Audience: ${input.targetAudience}
 Brand Voice: ${input.brandVoice}
 Sections to generate: ${sections.join(", ")}`;
+
+      if (input.regeneratingSection && input.regenerationFeedback) {
+        systemPrompt = `You are an expert website copywriter specialising in ${input.brandVoice.toLowerCase()} brand voice.
+CRITICAL INSTRUCTION: You are REVISING an existing section based on user feedback. You MUST prioritize the user's feedback above all else.
+Return ONLY valid JSON following this exact schema:
+${buildSectionSchema(sections)}
+
+Tone: ${input.brandVoice}`;
+
+        userPrompt = `Business Context:
+Business: ${input.businessDescription}
+Industry: ${input.industry}
+Target Audience: ${input.targetAudience}
+
+--- REGENERATION TASK ---
+We are regenerating ONLY the "${input.regeneratingSection}" section.
+
+Here is the PREVIOUS generated content for this section:
+${JSON.stringify(input.previousContent || {}, null, 2)}
+
+Here is the USER'S FEEDBACK requesting specific changes:
+"${input.regenerationFeedback}"
+
+INSTRUCTIONS:
+1. Analyze the USER'S FEEDBACK carefully.
+2. Rewrite the previous content to explicitly incorporate the requested changes, tone, or specific additions.
+3. If the user asks to add something, ADD IT. If they ask to change the tone, CHANGE IT.
+4. Output ONLY the updated section in valid JSON format according to the schema.`;
+      }
 
       const result = await model.generateContent({
         contents: [

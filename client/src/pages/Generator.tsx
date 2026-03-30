@@ -17,7 +17,7 @@ import {
   TrendingUp,
   AlignJustify,
 } from "lucide-react";
-import { generateInputSchema, type GenerateInput } from "@shared/schema";
+import { generateInputSchema, type GenerateInput, type GenerateOutput } from "@shared/schema";
 import { useGenerateContent } from "@/hooks/use-generate";
 import { countWords } from "@/lib/export-utils";
 import { Sidebar } from "@/components/layout/Sidebar";
@@ -69,13 +69,13 @@ function SectionHeading({ icon: Icon, label, className }: { icon: React.ElementT
 
 export default function Generator() {
   const {
-    mutate: generate,
     mutateAsync: generateAsync,
     isPending,
-    data: output,
     error,
     reset,
   } = useGenerateContent();
+
+  const [localOutput, setLocalOutput] = useState<GenerateOutput | null>(null);
 
   const form = useForm<GenerateInput>({
     resolver: zodResolver(generateInputSchema),
@@ -114,15 +114,55 @@ export default function Generator() {
   const handleClear = () => {
     form.reset();
     reset();
+    setLocalOutput(null);
   };
 
-  const onSubmit = (data: GenerateInput) => {
-    generate(data);
+  const onSubmit = async (data: GenerateInput) => {
+    try {
+      const freshOutput = await generateAsync(data);
+      setLocalOutput(freshOutput);
+    } catch (err) {
+      // Error handled by useGenerateContent hook
+    }
   };
 
-  const handleRegenerate = () => {
+  const handleRegenerate = async () => {
     const values = form.getValues();
-    generate(values);
+    try {
+      const freshOutput = await generateAsync(values);
+      setLocalOutput(freshOutput);
+    } catch (err) { }
+  };
+
+  const handleRegenerateSection = async (section: string, feedback: string) => {
+    if (!localOutput) return;
+
+    const values = form.getValues();
+    const specificValues: GenerateInput = {
+      ...values,
+      pageSections: [section],
+      regeneratingSection: section,
+      regenerationFeedback: feedback,
+    };
+
+    if (section === "Hero Section") specificValues.previousContent = localOutput.hero;
+    if (section === "About Us") specificValues.previousContent = localOutput.aboutUs;
+    if (section === "Services") specificValues.previousContent = localOutput.services;
+    if (section === "FAQ") specificValues.previousContent = localOutput.faq;
+
+    try {
+      const partialOutput = await generateAsync(specificValues);
+      setLocalOutput((prev: GenerateOutput | null) => {
+        if (!prev) return partialOutput;
+        return {
+          ...prev,
+          ...(partialOutput.hero ? { hero: partialOutput.hero } : {}),
+          ...(partialOutput.aboutUs ? { aboutUs: partialOutput.aboutUs } : {}),
+          ...(partialOutput.services ? { services: partialOutput.services } : {}),
+          ...(partialOutput.faq ? { faq: partialOutput.faq } : {}),
+        };
+      });
+    } catch (err) { }
   };
 
   return (
@@ -133,11 +173,6 @@ export default function Generator() {
         {/* Page header */}
         <div className="flex-shrink-0 flex items-center justify-between px-6 py-4 border-b border-border bg-background/80 backdrop-blur-sm">
           <h1 className="text-2xl font-extrabold tracking-tight text-foreground">Generate</h1>
-          {output && (
-            <span className="px-3 py-1 rounded-full bg-muted text-muted-foreground text-xs font-mono font-semibold border border-border">
-              {countWords(output)} Words
-            </span>
-          )}
         </div>
 
         {/* Main layout: Stacked on mobile, side-by-side on desktop */}
@@ -261,7 +296,7 @@ export default function Generator() {
                         Type your Target Audience
                       </Label>
                       <Textarea
-                        placeholder="Students..."
+                        placeholder="Mid Scale Enterprises, Small Scale Industries, Startups etc."
                         rows={3}
                         {...form.register("targetAudience")}
                         className={cn(
@@ -334,40 +369,48 @@ export default function Generator() {
             </div>
 
             {/* Sticky Generate/Clear buttons */}
-            <div className="flex-shrink-0 p-4 border-t border-border bg-background gap-2 flex">
-              <Button
-                type="submit"
-                disabled={isPending}
-                className="flex-1 h-11 font-bold bg-gradient-to-r from-primary to-secondary text-white shadow-md shadow-primary/25 hover:shadow-lg hover:shadow-primary/35 hover:-translate-y-px transition-all duration-200"
-                onClick={form.handleSubmit(onSubmit)}
-              >
-                {isPending ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <Wand2 className="w-4 h-4 mr-2" />
-                    Generate Content
-                  </>
-                )}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="px-5 h-11 font-semibold border-border dark:bg-transparent dark:hover:bg-muted"
-                onClick={handleClear}
-              >
-                Clear
-              </Button>
+            <div className="flex-shrink-0 p-4 border-t border-border bg-background flex flex-col gap-3">
+              <div className="flex items-center gap-2 px-1">
+                <div className="w-1 h-1 rounded-full bg-primary" />
+                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">
+                  Generating with Gemini 2.5 flash model
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  type="submit"
+                  disabled={isPending}
+                  className="flex-1 h-11 font-bold bg-gradient-to-r from-primary to-secondary text-white shadow-md shadow-primary/25 hover:shadow-lg hover:shadow-primary/35 hover:-translate-y-px transition-all duration-200"
+                  onClick={form.handleSubmit(onSubmit)}
+                >
+                  {isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Wand2 className="w-4 h-4 mr-2" />
+                      Generate Content
+                    </>
+                  )}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="px-5 h-11 font-semibold border-border dark:bg-transparent dark:hover:bg-muted"
+                  onClick={handleClear}
+                >
+                  Clear
+                </Button>
+              </div>
             </div>
           </div>
 
           {/* ─── RIGHT: Output Panel ──────────────────────────── */}
           <div className="flex-1 flex flex-col min-h-[400px] md:min-h-0 bg-muted/5">
             <AnimatePresence mode="wait">
-              {output ? (
+              {localOutput ? (
                 <motion.div
                   key="output"
                   initial={{ opacity: 0 }}
@@ -377,8 +420,9 @@ export default function Generator() {
                   className="flex-1 md:overflow-hidden p-4 md:p-6"
                 >
                   <GeneratedOutput
-                    data={output}
+                    data={localOutput}
                     onRegenerate={handleRegenerate}
+                    onRegenerateSection={handleRegenerateSection}
                     isRegenerating={isPending}
                   />
                 </motion.div>
