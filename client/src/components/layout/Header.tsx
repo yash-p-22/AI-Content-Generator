@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/theme-provider";
+import Logo from "@assets/favicon.png";
 
 function NavLinks({
   isActive,
@@ -27,11 +28,10 @@ function NavLinks({
     <nav className={`flex items-center gap-1 ${className}`}>
       <Link
         href="/generator"
-        className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
-          isActive("/generator")
+        className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 ${isActive("/generator")
             ? "bg-white dark:bg-[#252d3d] text-primary shadow-sm"
             : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-200/50 dark:hover:bg-white/10"
-        }`}
+          }`}
       >
         <Sparkle className="w-4 -mt-2 h-4" />
         <Sparkle className="-ml-3 w-3 h-3 text-gray-500 dark:text-gray-400" />
@@ -39,11 +39,10 @@ function NavLinks({
       </Link>
       <Link
         href="/history"
-        className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
-          isActive("/history")
+        className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 ${isActive("/history")
             ? "bg-white dark:bg-[#252d3d] text-primary shadow-sm"
             : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-200/50 dark:hover:bg-white/10"
-        }`}
+          }`}
       >
         <History className="w-4 h-4" />
         History
@@ -62,7 +61,7 @@ export function Header() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:shadow-primary/40 transition-all duration-300">
-            <Sparkles className="w-4 h-4 text-white" />
+            <img src={Logo} alt="Logo" className="w-full h-full object-cover" />
           </div>
           <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-400">
             ContentForge
@@ -113,11 +112,10 @@ export function Header() {
               <div className="flex flex-col gap-4 mt-8">
                 <Link
                   href="/generator"
-                  className={`flex items-center gap-3 p-3 rounded-xl text-base font-medium transition-all ${
-                    isActive("/generator")
+                  className={`flex items-center gap-3 p-3 rounded-xl text-base font-medium transition-all ${isActive("/generator")
                       ? "bg-primary/5 dark:bg-primary/10 text-primary"
                       : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5"
-                  }`}
+                    }`}
                 >
                   <Sparkle className="w-4 -mt-2 h-4" />
                   <Sparkle className="-ml-3 w-3 h-3 text-gray-500" />
@@ -125,11 +123,10 @@ export function Header() {
                 </Link>
                 <Link
                   href="/history"
-                  className={`flex items-center gap-3 p-3 rounded-xl text-base font-medium transition-all ${
-                    isActive("/history")
+                  className={`flex items-center gap-3 p-3 rounded-xl text-base font-medium transition-all ${isActive("/history")
                       ? "bg-primary/5 dark:bg-primary/10 text-primary"
                       : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5"
-                  }`}
+                    }`}
                 >
                   <History className="w-5 h-5" />
                   History

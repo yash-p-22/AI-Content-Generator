@@ -2,6 +2,7 @@ import { Link, useLocation } from "wouter";
 import { LayoutTemplate, Wand2, History, Settings, Sun, Moon, Sparkles } from "lucide-react";
 import { useTheme } from "@/lib/theme-provider";
 import { cn } from "@/lib/utils";
+import Logo from "@assets/favicon.png";
 
 interface NavItemProps {
   href: string;
@@ -47,7 +48,7 @@ export function Sidebar() {
     <aside className="hidden md:flex w-[72px] flex-shrink-0 flex flex-col items-center border-r border-border bg-card py-4 h-full z-30">
       {/* Logo */}
       <div className="mb-4 w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20 flex-shrink-0">
-        <Sparkles className="w-4 h-4 text-white" />
+        <img src={Logo} alt="Logo" className="w-full h-full object-cover" />
       </div>
 
       {/* Nav items */}
